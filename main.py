@@ -18,7 +18,7 @@ paf = 'edit here'
 name = 'items.csv'
 file_path = os.path.join(paf, name)
 
-
+title_df = pd.read_csv(file_path)
 # program to calculate usage of liquors
 # read in csv to master data frame
 ddf = pd.read_csv(file_path, header=1)
@@ -99,13 +99,16 @@ sodajuice_dff = pd.read_csv('bev.csv')
 bev_items = sodajuice_dff['Item'].tolist()
 
 secret_items = ['Fool\'s Gold', 'Smoke &  Embers', 'Satellite', 'Martinique Swizzle', 'Puka Punch',
-                'Blackbeard\'s Ghost', 'Zombie', 'Port Light']
+                'Blackbeard\'s Ghost', 'Zombie', 'Port Light', 'Naked Ape']
+az_item = ['White Russian', 'Pina Colada', 'Margarita', 'Long Island Iced Tea', 'Irish Coffee', 'Moscow Mule',
+           'Kamikazi', 'Mojito', 'Cosmopolitan', 'Lemon Drop', 'Cadillac Margarita', 'Old Fashioned', 'Negroni',
+           'Screwdriver', 'Gimlet', 'French 75', 'Daquiri', 'Mimosa', 'Whiskey Sour', 'Blue Hawaiian',
+           'Dark and Stormy']
 # after putting it into a list, we will compare locations in our alcohol subframe
 # parsing through our item lists we then set a new column in df['type']
 #alc_df = alc_df.loc[:'type'] = 'other'
 alc_df = alc_df.copy()
 alc_df.loc[:, 'type'] = 'other'
-
 alc_df.loc[alc_df['Item'].isin(whiskey_items), 'type'] = "whiskey"
 alc_df.loc[alc_df['Item'].isin(mocktail_items), 'type'] = "mocktail"
 alc_df.loc[alc_df['Item'].isin(vodka_items), 'type'] = "vodka"
@@ -114,6 +117,7 @@ alc_df.loc[alc_df['Item'].isin(rum_items), 'type'] = "rum"
 alc_df.loc[alc_df['Item'].isin(tequila_items), 'type'] = "tequila"
 alc_df.loc[alc_df['Item'].isin(cocktails_item), 'type'] = "cocktail"
 alc_df.loc[alc_df['Item'].isin(secret_items), 'type'] = "secret"
+alc_df.loc[alc_df['Item'].isin(az_item), 'type'] = "az"
 
 # we then group by type
 grouped = alc_df.groupby('type')
@@ -127,6 +131,7 @@ cocktail_df = grouped.get_group('cocktail')
 mocktail_df = grouped.get_group('mocktail')
 other_df = grouped.get_group('other')
 secret_df = grouped.get_group('secret')
+az_df = grouped.get_group('az')
 # this grouping will leave cocktail names out
 # program currently designed to track main usage
 mrMakai = pd.DataFrame({'Item': ['Mr. Makai'], 'Size': ['DOUBLE'], 'Report Category': ['ALCOHOL'], 'Qty': [0],
@@ -507,7 +512,7 @@ dataframe_dict = {'entrees': entrees_df, 'Sides': side_df, 'Kids Meal': kids_df,
                   'vodka': vodka_df, 'whiskey': whiskey_df, 'gin': gin_df, 'rum': rum_df, 'mocktail': mocktail_df,
                   'cocktail': cocktail_df, 'tequila': tequila_df, 'other': other_df, 'syrup': syrups_df,
                   'juice': juice_df, 'combo': df_combined, 'beer': beer_df, 'draft beer': draftbeer_df,
-                  'wine': wine_df, 'Secret Menu': secret_df}
+                  'wine': wine_df, 'Secret Menu': secret_df, 'A-Z Cocktails': az_df}
 tequila_df_grouped = tequila_df.groupby(['Item'], as_index=False).sum()[['Ounce', '750', 'liter']]
 tequila_df_grouped = tequila_df.join(tequila_df_grouped, lsuffix='_original', rsuffix='_grouped')
 
